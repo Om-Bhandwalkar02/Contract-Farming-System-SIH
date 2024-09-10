@@ -1,6 +1,8 @@
 from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect, HttpResponse
-from .forms import FarmerSignupForm, BuyerSignupForm, LoginForm
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import FarmerSignupForm, BuyerSignupForm, LoginForm, EditProfileForm
+
 
 # Farmer Signup
 def farmer_signup(request):
@@ -66,3 +68,46 @@ def buyer_login(request):
     else:
         form = LoginForm()
     return render(request, 'users/login.html', {'form': form, 'role': 'Buyer'})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(instance=request.user, data=request.POST, files=request.FILES, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = EditProfileForm(instance=request.user, user=request.user)
+
+    return render(request, 'users/edit_profile.html', {'form': form})
+
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import ChangePINForm
+
+
+@login_required
+def change_pin(request):
+    if request.method == 'POST':
+        form = ChangePINForm(request.POST)
+        if form.is_valid():
+            old_pin = form.cleaned_data['old_pin']
+            new_pin = form.cleaned_data['new_pin']
+
+            user = request.user
+
+            if user.check_password(old_pin):
+                user.set_password(new_pin)
+                user.save()
+                update_session_auth_hash(request, user)  # Keeps the user logged in after password change
+                return redirect('index')  # Redirect to a success page or dashboard
+            else:
+                form.add_error('old_pin', 'Current PIN is incorrect.')
+    else:
+        form = ChangePINForm()
+
+    return render(request, 'users/change_pin.html', {'form': form})
+

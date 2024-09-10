@@ -12,3 +12,4 @@ class ContactBackend(ModelBackend):
                 return user
         except User.DoesNotExist:
             return None
+
