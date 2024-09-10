@@ -1,0 +1,30 @@
+# Python
+*.pyc *.pyo *.pyd __pycache__/ *.so *.egg *.egg-info/ .eggs/
+# Virtual environments
+env/ venv/ ENV/ .venv/
+# Django
+*.log *.pot *.pyc *.sqlite3 db.sqlite3 media/ staticfiles/ static/
+# If using SQLite3 database
+*.sqlite3
+# Coverage reports
+htmlcov/ .tox/ .coverage .coverage.* .cache nosetests.xml coverage.xml *.cover .hypothesis/
+# PyInstaller Usually these files are written by a Python script from a template
+*.manifest *.spec
+# C extensions
+*.o *.a *.dylib *.so *.dll
+# Jupyter Notebook
+.ipynb_checkpoints
+# Unit test / coverage reports
+.pytest_cache/ .cache/ nosetests.xml coverage.xml *.cover .hypothesis/
+# Environments
+.env .env.*
+# MySQL database dumps
+*.sql *.dump
+# IDEs
+.vscode/ .idea/ *.swp *.swo *.swn
+# Docker
+docker-compose*.yaml Dockerfile .env.db
+# Node.js
+node_modules/
+# Tailwind CSS build
+build/ dist/

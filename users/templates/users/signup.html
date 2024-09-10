@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{ role }} Signup
+{% endblock %}
+
+{% block content %}
+<h1>{{ role }} Signup</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Signup</button>
+</form>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Farmer Dashboard
+{% endblock %}
+
+{% block content %}
+	<h1>Farmer Dashboard</h1>
+<form method="POST" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button type="submit" class="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded">
+    Logout
+  </button>
+</form>{% endblock %}
