@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Verify Phone Number</h1>
+
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="bg-red-500 text-white p-2 rounded mb-2">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="otp" class="block text-lg font-medium">Enter OTP:</label>
+            <input type="text" id="otp" name="otp" class="border border-gray-300 rounded p-2 w-full" placeholder="Enter OTP" required>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded w-full">Verify OTP</button>
+    </form>
+</div>
+{% endblock %}

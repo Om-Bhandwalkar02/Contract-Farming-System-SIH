@@ -24,8 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'users.apps.UsersConfig',
-    "base.apps.BaseConfig"
+    "base.apps.BaseConfig",
+    "contracts.apps.ContractsConfig"
 ]
 
 MIDDLEWARE = [
@@ -101,7 +103,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Ensure static directory is correctly set
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -116,5 +120,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+TWILIO_ACCOUNT_SID = 'ACf172fc35f3ab12b0029f7377ab78d7c9'
+TWILIO_AUTH_TOKEN = '77e480412f0d31fbd34b7d1067928eb6'
+TWILIO_PHONE_NUMBER = '+12088088591'
+
+
 
 

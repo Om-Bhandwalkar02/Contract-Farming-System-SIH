@@ -8,5 +8,8 @@ urlpatterns = [
     path('buyer/login/', views.buyer_login, name='buyer_login'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('change-pin/', views.change_pin, name='change_pin'),
+    path('request-otp/<str:role>/', views.request_otp, name='request_otp'),
+    path('verify-phone-number/', views.verify_phone_number, name='verify_phone_number'),
+    path('check-phone/', views.check_phone_number, name='check_phone_number'),
 
 ]

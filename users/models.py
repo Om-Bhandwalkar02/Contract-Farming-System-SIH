@@ -1,4 +1,5 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 
@@ -19,13 +20,16 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):  # Added PermissionsMixin
     user_id = models.AutoField(primary_key=True)  # Primary key field
-    contact = models.CharField(max_length=10, unique=True)
+
+    # Using PhoneNumberField for contact, with the region set to India
+    contact = PhoneNumberField(unique=True, region='IN')
+
     full_name = models.CharField(max_length=255)
     role = models.CharField(max_length=10, choices=(('farmer', 'Farmer'), ('buyer', 'Buyer')))
     aadhar_number = models.CharField(max_length=12, unique=True)
     aadhar_certificate = models.FileField(upload_to='media/aadhar/')
     farmer_certificate = models.FileField(upload_to='media/certificates/', null=True, blank=True)
-    buyer_certificate = models.ImageField(upload_to='media/certificates/', null=True, blank=True)
+    buyer_certificate = models.FileField(upload_to='media/certificates/', null=True, blank=True)
     profile_picture = models.ImageField(upload_to='media/profile_pictures/', null=True, blank=True)
     address = models.CharField(max_length=255)
     registration_date = models.DateTimeField(auto_now_add=True)

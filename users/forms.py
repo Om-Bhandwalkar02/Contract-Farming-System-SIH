@@ -15,7 +15,7 @@ class FarmerSignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['full_name', 'contact', 'aadhar_number', 'farmer_certificate', 'address']
+        fields = ['full_name', 'aadhar_number', 'farmer_certificate', 'address']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -33,7 +33,7 @@ class BuyerSignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['full_name', 'contact', 'aadhar_number', 'buyer_certificate', 'address']
+        fields = ['full_name', 'aadhar_number', 'buyer_certificate', 'address']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -49,12 +49,21 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Phone Number", widget=forms.TextInput())
     password = forms.CharField(label="PIN", widget=forms.PasswordInput())
 
+    # Override the clean_username method to preprocess the phone number
+    def clean_username(self):
+        phone_number = self.cleaned_data['username']
+
+        if not phone_number.startswith('+91'):
+            phone_number = '+91' + phone_number
+
+        return phone_number
+
 
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'full_name', 'contact', 'address', 'profile_picture',
+            'full_name', 'address', 'profile_picture',
             'aadhar_certificate', 'farmer_certificate', 'buyer_certificate'
         ]
 

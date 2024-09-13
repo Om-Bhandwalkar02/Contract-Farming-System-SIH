@@ -6,4 +6,7 @@
 
 {% block content %}
 	<h1>Home Page</h1>
+    <!-- homepage.html -->
+    <a href="{% url 'request_otp' 'farmer' %}">Signup as Farmer</a>
+    <a href="{% url 'request_otp' 'buyer' %}">Signup as Buyer</a>
 {% endblock %}

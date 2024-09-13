@@ -6,11 +6,6 @@ def index(request):
     return render(request, 'base/index.html')
 
 
-@login_required
-def farmer_dashboard(request):
-    return render(request, 'base/farmer_dashboard.html')
+def dashboard(request):
+    return render(request, 'base/dashboard.html')
 
-
-@login_required
-def buyer_dashboard(request):
-    return render(request, 'base/buyer_dashboard.html')
