@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Contract List
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-image: url('{% static 'assets/agri1.jpg' %}');
+            background-size: cover; /* Cover the whole page */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-position: center; /* Center the image */
+            margin: 0; /* Remove default body margin */
+            height: 100vh; /* Full height */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+    </style>
+            <table class="bg-white border border-gray-200 rounded-xl shadow-lg mx-auto">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="py-3 px-4 border-b text-left">Contract ID</th>
+                    <th class="py-3 px-4 border-b text-left">Product Name</th>
+                    <th class="py-3 px-4 border-b text-left">Quantity</th>
+                    <th class="py-3 px-4 border-b text-left">Price per Unit</th>
+                    <th class="py-3 px-4 border-b text-left">Delivery Date</th>
+                    <th class="py-3 px-4 border-b text-left">Status</th>
+                    <th class="py-3 px-4 border-b text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contract in contracts %}
+                    <tr class="hover:bg-green-50">
+                        <td class="py-3 px-4 border-b">{{ contract.id }}</td>
+                        <td class="py-3 px-4 border-b">{{ contract.product_name }}</td>
+                        <td class="py-3 px-4 border-b">{{ contract.quantity }} kg</td>
+                        <td class="py-3 px-4 border-b">₹{{ contract.price_per_unit }}</td>
+                        <td class="py-3 px-4 border-b">{{ contract.delivery_date }}</td>
+                        <td class="py-3 px-4 border-b">
+                            {% if contract.is_fully_signed %}
+                                <span class="text-green-700 font-semibold">Fully Signed</span>
+                            {% elif contract.signed_by_farmer %}
+                                <span class="text-yellow-700 font-semibold">Waiting for Buyer</span>
+                            {% elif contract.signed_by_buyer %}
+                                <span class="text-yellow-700 font-semibold">Waiting for Farmer</span>
+                            {% else %}
+                                <span class="text-red-700 font-semibold">Not Signed</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-4 border-b">
+                            <a href="{% url 'contract_detail' contract.id %}" class="text-green-600 hover:underline">View Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock %}

@@ -20,7 +20,7 @@ def generate_otp():
 def send_otp(contact, otp):
     try:
         # phone number E.164 format
-        parsed_number = phonenumbers.parse(contact, "IN")  # 'IN' for India; use the appropriate country code
+        parsed_number = phonenumbers.parse(contact, "IN")
         if not phonenumbers.is_valid_number(parsed_number):
             raise ValueError("Invalid phone number format.")
 
@@ -61,6 +61,7 @@ def verify_phone_number(request):
 
 
 def request_otp(request, role):
+
     # Ensure the role is either 'farmer' or 'buyer'
     if role not in ['farmer', 'buyer']:
         return redirect('homepage')  # Redirect to homepage if an invalid role is provided
@@ -88,7 +89,7 @@ def request_otp(request, role):
 
             return redirect('verify_phone_number')
 
-    return render(request, 'users/request_otp.html')
+    return render(request, 'users/request_otp.html', {'role': role})
 
 
 # Farmer Signup
@@ -142,7 +143,7 @@ def farmer_login(request):
             user = authenticate(request, username=phone_number, password=pin)
             if user is not None and user.role == 'farmer':
                 login(request, user)
-                return redirect('farmer_dashboard')
+                return redirect('dashboard')
             else:
                 form.add_error(None, 'Invalid credentials or role mismatch.')
     else:
@@ -160,7 +161,7 @@ def buyer_login(request):
             user = authenticate(request, username=phone_number, password=pin)
             if user is not None and user.role == 'buyer':
                 login(request, user)
-                return redirect('buyer_dashboard')
+                return redirect('dashboard')
             else:
                 form.add_error(None, 'Invalid credentials or role mismatch.')
     else:
@@ -215,9 +216,9 @@ def check_phone_number(request):
     exists = User.objects.filter(contact=phone_number).exists()
 
     if exists:
-        return HttpResponse("<p class='text-red-500 dark:text-red-300 text-xs italic'>Phone number already exists. "
+        return HttpResponse("<p style='color:red' class='mt-1 text-xs italic'>Phone number already registered. "
                             "Please login.</p>"
                             "<script>document.querySelector('button[type=\"submit\"]').disabled = true;</script>")
     else:
-        return HttpResponse("<p style='color:#16a34a' class='text-xs italic'>Phone number is available.</p>"
+        return HttpResponse("<p style='color:#16a34a' class='mt-1 text-xs italic'>Phone number is available.</p>"
                             "<script>document.querySelector('button[type=\"submit\"]').disabled = false;</script>")

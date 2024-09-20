@@ -44,4 +44,4 @@ class User(AbstractBaseUser, PermissionsMixin):  # Added PermissionsMixin
     objects = UserManager()
 
     def __str__(self):
-        return self.contact
+        return str(self.contact)  # changes during contracts

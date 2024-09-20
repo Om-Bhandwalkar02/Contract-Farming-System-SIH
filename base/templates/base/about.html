@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	About
+{% endblock %}
+
+{% block content %}
+    <script src="https://cdn.tailwindcss.com"></script>
+	<!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+        .hero-bg {
+            background-image: url('{% static 'assets/agri1.jpg' %}');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .hero-bg::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .carousel-wrapper {
+            height: 100vh;
+        }
+        .carousel-item {
+            position: relative;
+            height: 100%;
+        }
+        .carousel-item img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .carousel-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .carousel-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem;
+            width: 90%;
+        }
+        .custom-bg-white {
+            background-color: white !important;
+        }
+        .custom-text-black {
+            color: black;
+        }
+        .testimonials {
+            background-color: #f9f9f9;
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .testimonials h2 {
+            color: #000;
+            margin-bottom: 3rem;
+        }
+
+        .testimonials .bg-white {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .testimonials blockquote {
+            font-style: italic;
+            color: #333;
+        }
+
+        .testimonials footer {
+            color: #666;
+        }
+        .header-transparent {
+            background-color: transparent !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-solid {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #navbar {
+            transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+        }
+
+        #navbar.transparent a {
+            color: white;
+        }
+
+        #navbar.scrolled a {
+            color: black;
+        }
+
+        #navbar.scrolled {
+            background-color: white;
+            color: black;
+        }
+    </style>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carouselItems = document.querySelectorAll('[data-carousel-item]');
+            const indicators = document.querySelectorAll('[data-carousel-slide-to]');
+            let currentIndex = 0;
+            let autoSlideInterval;
+
+            function showSlide(index) {
+                carouselItems.forEach((item, i) => {
+                    item.classList.toggle('block', i === index);
+                    item.classList.toggle('hidden', i !== index);
+                });
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('bg-blue-600', i === index);
+                    indicator.classList.toggle('bg-gray-300', i !== index);
+                });
+            }
+
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % carouselItems.length;
+                    showSlide(currentIndex);
+                }, 2000);
+            }
+
+            document.querySelector('[data-carousel-prev]').addEventListener('click', () => {
+                clearInterval(autoSlideInterval);
+                currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+                showSlide(currentIndex);
+                startAutoSlide();
+            });
+
+            document.querySelector('[data-carousel-next]').addEventListener('click', () => {
+                clearInterval(autoSlideInterval);
+                currentIndex = (currentIndex + 1) % carouselItems.length;
+                showSlide(currentIndex);
+                startAutoSlide();
+            });
+
+            startAutoSlide();
+            showSlide(currentIndex);
+
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                const heroSection = document.querySelector('.hero-bg');
+                const heroSectionHeight = heroSection.offsetHeight;
+
+                if (window.scrollY > heroSectionHeight) {
+                    navbar.classList.add('scrolled');
+                    navbar.classList.remove('transparent');
+                } else {
+                    navbar.classList.add('transparent');
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
+
+    <div class="bg-gray-100 text-gray-900">
+        <!-- Header -->
+        {% include 'navbar.html' %}
+
+
+<!-- Hero Section -->
+<section class="hero-bg h-screen flex items-center justify-center text-center">
+    <div class="hero-content" style="position: relative; text-align: center; color: white; padding: 1rem; z-index: 2;">
+        <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem;">Empowering Farmers, Transforming Markets</h1>
+        <p style="font-size: 1.25rem; max-width: 80%; margin: 0 auto; line-height: 1.5;">
+            Join us in fostering direct connections and fair transactions.
+        </p>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-12">
+    <div class="container mx-auto">
+        <div class="text-center">
+            <h3 class="text-3xl font-bold mb-4">For the welfare of the farmers and the buyers</h3>
+            <p class="text-gray-700 max-w-2xl mx-auto">Farmers now have full control over their sales, eliminating middlemen and ensuring transparency in pricing and payment.</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12">
+            <div class="bg-transparent shadow-lg p-6 text-center rounded-lg flex items-center">
+                <img src="{% static 'assets/calendar.png' %}" alt="Description" class="w-16 h-16 object-cover rounded-full mr-4">
+                <div>
+                    <h4 class="text-4xl font-semibold text-green-600">2024</h4>
+                    <p class="text-gray-600 mt-2">The Year We Revolutionized Farming Together.</p>
+                </div>
+            </div>
+            <div class="bg-transparent shadow-lg p-6 text-center rounded-lg flex items-center">
+                <img src="{% static 'assets/team.png' %}" alt="Description" class="w-16 h-16 object-cover rounded-full mr-4">
+                <div>
+                    <h4 class="text-4xl font-semibold text-green-600">10+</h4>
+                    <p class="text-gray-600 mt-2">Passionate Team Members Committed to Your Success.</p>
+                </div>
+            </div>
+            <div class="bg-transparent shadow-lg p-6 text-center rounded-lg flex items-center">
+                <img src="{% static 'assets/village.png' %}" alt="Description" class="w-16 h-16 object-cover rounded-full mr-4">
+                <div>
+                    <h4 class="text-4xl font-semibold text-green-600">200+</h4>
+                    <p class="text-gray-600 mt-2">Villages Covered: Strengthening Community Connections.</p>
+                </div>
+            </div>
+            <div class="bg-transparent shadow-lg p-6 text-center rounded-lg flex items-center">
+                <img src="{% static 'assets/road.png' %}" alt="Description" class="w-16 h-16 object-cover rounded-full mr-4">
+                <div>
+                    <h4 class="text-4xl font-semibold text-green-600">12500</h4>
+                    <p class="text-gray-600 mt-2">Km Traveled: Dedicated to Reaching Every Farmer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Carousel Section -->
+<section class="py-0 bg-gray-50 carousel-wrapper">
+    <div id="default-carousel" class="relative w-full h-full" data-carousel="slide">
+        <!-- Carousel wrapper -->
+        <div class="relative w-full h-full overflow-hidden rounded-lg">
+            <!-- Item 1 -->
+            <div class="relative duration-700 ease-in-out carousel-item" data-carousel-item>
+                <img src="{% static 'assets/carousel1.jpg' %}" alt="Farming Landscape">
+                <div class="carousel-text">
+                    <h2>Take Charge of Your Future</h2>
+                    <p class="text-lg font-normal">Control your sales directly, eliminating middlemen to maximize your profits.</p>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="relative duration-700 ease-in-out carousel-item" data-carousel-item>
+                <img src="{% static 'assets/about_img.jpg' %}" alt="Transparent Pricing">
+                <div class="carousel-text">
+                    <h2>Transparency is Key</h2>
+                    <p class="text-lg font-normal">Access real-time pricing information and know your buyers to ensure fair transactions.</p>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="relative duration-700 ease-in-out carousel-item" data-carousel-item>
+                <img src="{% static 'assets/carousel3.jpg' %}" alt="Community of Farmers">
+                <div class="carousel-text">
+                    <h2>Join the Movement</h2>
+                    <p class="text-lg font-normal">Be part of a community that empowers farmers and enhances livelihoods through direct connections.</p>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="relative duration-700 ease-in-out carousel-item" data-carousel-item>
+                <img src="{% static 'assets/carousel4.jpg' %}" alt="Trust in Transactions">
+                <div class="carousel-text">
+                    <h2>Where Trust Meets Agriculture</h2>
+                    <p class="text-lg font-normal">Our platform provides secure contracts and timely payments, fostering trust and reliability in every transaction.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Carousel indicators -->
+        <div class="absolute flex space-x-3 -translate-x-1/2 bottom-2.5 left-1/2">
+            <button type="button" class="w-3 h-3 rounded-full bg-gray-300" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-gray-300" aria-label="Slide 2" data-carousel-slide-to="1"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-gray-300" aria-label="Slide 3" data-carousel-slide-to="2"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-gray-300" aria-label="Slide 4" data-carousel-slide-to="3"></button>
+        </div>
+        <!-- Carousel controls -->
+        <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+            <span class="inline-flex items-center justify-center w-10 h-10 text-white bg-gray-800 rounded-full group-hover:bg-gray-700 group-focus:ring-4 group-focus:ring-gray-600" aria-hidden="true">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 1l-9 6 9 6"></path>
+                </svg>
+                <span class="sr-only">Previous</span>
+            </span>
+        </button>
+        <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+            <span class="inline-flex items-center justify-center w-10 h-10 text-white bg-gray-800 rounded-full group-hover:bg-gray-700 group-focus:ring-4 group-focus:ring-gray-600" aria-hidden="true">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 1 9 6-9 6"></path>
+                </svg>
+                <span class="sr-only">Next</span>
+            </span>
+        </button>
+    </div>
+</section>
+<section class="testimonials py-24 bg-gray-100">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-12 text-black">What Our Users Say</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+            <!-- Testimonial 1 -->
+            <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center text-gray-700">
+                <blockquote class="text-center mb-4">
+                    <p class="text-lg italic">"KisanMitra has been a game-changer for my farm. The secure contracts and reliable payments have given me peace of mind."</p>
+                </blockquote>
+                <footer class="text-sm font-semibold">— Ravi Sharma, Farmer</footer>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center text-gray-700">
+                <blockquote class="text-center mb-4">
+                    <p class="text-lg italic">"KisanMitra has streamlined our procurement process. The real-time chat and escrow payments have made our business more efficient."</p>
+                </blockquote>
+                <footer class="text-sm font-semibold">— Neha Gupta, Dealer</footer>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="custom-bg-white dark:bg-white">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+        <div class="mx-auto max-w-screen-md sm:text-center">
+            <h2 class="mb-4 text-3xl tracking-tight font-extrabold text-black sm:text-4xl">
+                Sign up for our newsletter
+            </h2>
+            <p class="mx-auto mb-8 max-w-2xl font-light md:mb-12 sm:text-xl text-black">
+                Stay up to date with the roadmap progress, announcements, and exclusive discounts. Feel free to sign up with your email.
+            </p>
+            <form action="#">
+                <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                    <div class="relative w-full">
+                        <label for="email" class="hidden mb-2 text-sm font-medium text-black">Email address</label>
+                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                        </div>
+                        <input class="block p-3 pl-10 w-full text-sm text-black bg-white rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your email" type="email" id="email" required="">
+                    </div>
+                    <div>
+                        <button type="submit" class="py-3 px-5 w-full text-sm font-medium text-center text-black rounded-lg border cursor-pointer bg-primary-700 border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+                <div class="mx-auto max-w-screen-sm text-sm text-left text-black">
+                    We care about the protection of your data. <a href="#" class="font-medium text-primary-600 hover:underline">Read our Privacy Policy</a>.
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+{% include 'footer.html' %}
+    
+    </div>
+{% endblock %}

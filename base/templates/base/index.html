@@ -1,12 +1,442 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
-	Home
+	कृषिमित्र
 {% endblock %}
 
 {% block content %}
-	<h1>Home Page</h1>
-    <!-- homepage.html -->
-    <a href="{% url 'request_otp' 'farmer' %}">Signup as Farmer</a>
-    <a href="{% url 'request_otp' 'buyer' %}">Signup as Buyer</a>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap');
+
+    body {
+      font-family: 'Lexend', sans-serif;
+    }
+
+    #navbar {
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .sec-about {
+      position: relative;
+    }
+
+    .sec-about h2 {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sec-about h2:before {
+      position: absolute;
+      content: '';
+      width: 250px;
+      height: 100px;
+      background: #F37022;
+      clip-path: polygon(0 0, 100% 100%, 100% 0);
+      opacity: .29;
+      left: 5%;
+      transform: rotate(15deg);
+      z-index: -1;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .faq-item button {
+      transition: background-color 0.3s;
+    }
+
+    .faq-item button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+
+    .faq-item button[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .faq-item div {
+      transition: max-height 0.3s ease-out;
+    }
+
+    .faq-item div.hidden {
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .faq-item div.show {
+      max-height: 1000px;
+    }
+    #navbar {
+      transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+    }
+
+    #navbar.transparent {
+      background-color: transparent;
+      color: white;
+    }
+
+    #navbar.scrolled {
+      background-color: white;
+      color: black;
+    }
+
+    #navbar.scrolled a {
+      color: black;
+    }
+    .floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #90EE90;
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      display: none;
+    }
+
+    .floating-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+
+    <div class="overflow-x-hidden">
+        <!-- Header -->
+        {% include 'navbar.html' %}
+        <section id="home" class="h-screen relative flex items-center justify-center bg-cover bg-center"
+        style="background-image: url({% static 'assets/index_hero.jpg' %});">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+        <div class="md:w-3/5 text-white space-y-4 z-10" data-aos="fade-right">
+        <h1 class="text-5xl font-bold">Welcome to कृषिमित्र</h1>
+        <p class="text-lg">Cultivating Confidence: Connect, Contract, Succeed.</p>
+    </div>
+
+    <div class="md:w-2/5 grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 md:mt-0 z-10">
+      <!-- Card 1 -->
+      <div class="card bg-white/50 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
+        <!-- Image for Card 1 -->
+        <img src="{% static 'assets/farmer_hero.png' %}" alt="Card 1 Image" class="w-full h-32 object-cover rounded-lg mb-4">
+
+        <!-- Card 1 Title -->
+        <h2 class="text-xl font-semibold mb-4 text-black">Farmer</h2>
+
+        <!-- Card 1 Description -->
+        <p class="text-black">Grow your dreams, harvest your success!</p>
+        <!-- Register and Login Links -->
+        <div class="mt-4">
+          <a href="{% url 'farmer_signup' %}" class="text-black underline mr-4">Register</a>
+          <a href="{% url 'farmer_login' %}" class="text-black underline">Login</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card bg-white/50 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
+        <!-- Image for Card 2 -->
+        <img src="{% static 'assets/buyer_hero.png' %}" alt="Card 2 Image" class="w-full h-32 object-cover rounded-lg mb-4">
+
+        <!-- Card 2 Title -->
+        <h2 class="text-xl font-semibold mb-4 text-black">Dealer</h2>
+
+        <!-- Card 2 Description -->
+        <p class="text-black">Connecting quality with every transaction!</p>
+
+        <!-- Register and Login Links -->
+        <div class="mt-4">
+          <a href="{% url 'buyer_signup' %}" class="text-black underline mr-4">Register</a>
+          <a href="{% url 'buyer_login' %}" class="text-black underline">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="download-app" class="py-12 bg-gray-100">
+  <div class="container mx-auto">
+    <!-- Heading -->
+    <div class="flex flex-col items-center mb-8">
+      <h3 class="text-3xl font-semibold text-gray-800">DOWNLOAD MOBILE APP</h3>
+      <div class="w-16 h-1 bg-blue-600 mt-4"></div> <!-- Decorative line under the heading -->
+    </div>
+
+    <!-- Buttons for App Stores -->
+    <div class="flex justify-center space-x-8">
+      <!-- Play Store Button -->
+      <a href="#"
+         class="text-decoration-none text-white">
+        <img src="{% static 'assets/playstore_img.svg' %}" class="h-12 md:h-16" alt="Get it on Playstore">
+      </a>
+      <!-- App Store Button -->
+      <a href="#" class="text-decoration-none text-white">
+        <img src="{% static 'assets/appstore_img.svg' %}" class="h-12 md:h-16" alt="Download on the AppStore">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- About Section with AOS effect -->
+<section id="about" class="sec-about h-screen bg-gray-100 flex items-center">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+    <!-- Text section (Left side) -->
+    <div class="md:w-1/2 relative space-y-4">
+      <!-- Heading with decorative background -->
+      <h2 class="text-4xl font-semibold relative">
+        About कृषिमित्र
+      </h2>
+      <!-- Placeholder paragraph text -->
+      <p class="text-lg text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac semper risus, in viverra erat. Vivamus in ipsum eget velit tincidunt egestas. Etiam sit amet ligula non justo pretium pharetra. Donec pharetra odio ut purus consequat, in tincidunt nunc cursus. Curabitur vel nisi sit amet eros facilisis tempor non vel massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus ultricies quam ac odio vestibulum, non ullamcorper tortor consectetur. Nulla facilisi. Integer a ligula sit amet urna consequat consequat. Duis consequat orci nec orci pharetra, vel viverra velit euismod.
+      </p>
+      <!-- Learn more button -->
+      <a href="{% url 'about' %}" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">
+        Learn More
+      </a>
+    </div>
+
+    <!-- Image section (Right side) with fade-left animation -->
+    <div class="md:w-1/2 mt-8 md:mt-0 ml-12" data-aos="fade-left">
+      <img src="{% static 'assets/carousel2.avif' %}" alt="About Us" class="rounded-lg shadow-lg">
+    </div>
+  </div>
+</section>
+        
+<!-- Features Section -->
+<section id="features" class="relative overflow-hidden bg-gray-900 py-24 sm:py-32">
+  <!-- Background Image and Overlay -->
+  <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-right md:object-center">
+
+  <!-- Gradient Decorative Element -->
+  <div class="absolute inset-0 -z-20 transform-gpu blur-3xl" aria-hidden="true">
+    <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20"
+         style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+  </div>
+
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+    <!-- Heading -->
+    <div class="text-center mb-12">
+      <h3 class="text-3xl font-semibold text-white">Features of कृषिमित्र</h3>
+      <div class="w-16 h-1 bg-blue-600 mx-auto mt-4"></div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1: Connecting Dealers and Farmers -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7v10m10-10v10M4 12l8 8 8-8-8-8-8 8z"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">Connecting Dealers and Farmers</h4>
+        <p class="text-gray-300">Seamlessly connect dealers and farmers through our app, creating a streamlined marketplace for agricultural produce.</p>
+      </div>
+
+      <!-- Feature 2: Translation of Text -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5M4 4h16v16H4V4z"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">Translation of Text</h4>
+        <p class="text-gray-300">Enhance accessibility with automatic translation of text into multiple languages, ensuring users from different regions can use the app effectively.</p>
+      </div>
+
+      <!-- Feature 3: Hassle-Free Smart Contract -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">Hassle-Free Smart Contract</h4>
+        <p class="text-gray-300">Utilize smart contracts to automate agreements between farmers and dealers, reducing paperwork and simplifying the process.</p>
+      </div>
+
+      <!-- Feature 4: Escrow Account -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v9M3 21V3m0 18L12 3l9 15"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">Escrow Account</h4>
+        <p class="text-gray-300">Ensure secure transactions with an escrow account that collects payment from the dealer before contract signing and processes payment to the farmer after successful delivery.</p>
+      </div>
+
+      <!-- Feature 5: Tutorial Section -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4V4z"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">Dedicated Tutorial Section</h4>
+        <p class="text-gray-300">Access comprehensive tutorials to guide users on how to effectively use the app, ensuring a smooth onboarding process.</p>
+      </div>
+
+      <!-- Feature 6: User-Friendly Dashboard -->
+      <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="mb-4">
+          <svg class="w-12 h-12 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4V4z"></path>
+          </svg>
+        </div>
+        <h4 class="text-xl font-semibold mb-2 text-white">User-Friendly Dashboard</h4>
+        <p class="text-gray-300">Manage contracts, payments, and communications from an intuitive dashboard designed for ease of use and efficient navigation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="py-12 bg-gray-100">
+  <div class="container mx-auto px-4">
+    <!-- Heading -->
+    <div class="text-center mb-12">
+      <h3 class="text-3xl font-semibold text-gray-800">Frequently Asked Questions</h3>
+      <div class="w-16 h-1 bg-blue-600 mx-auto mt-4"></div>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="max-w-3xl mx-auto">
+      <!-- FAQ Item 1 -->
+      <div class="bg-white rounded-lg shadow-md mb-4 faq-item">
+        <button id="faq-toggle-1" class="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-600" aria-expanded="false">
+          <span class="text-lg font-semibold text-gray-800">What is the Assured Contract Farming System?</span>
+          <svg id="faq-icon-1" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-content-1" class="px-6 py-4 border-t border-gray-200 hidden">
+          <p class="text-gray-700">The Assured Contract Farming System is a platform that facilitates agreements between farmers and buyers, ensuring market stability by securing guaranteed buyers for agricultural produce.</p>
+        </div>
+      </div>
+
+      <!-- FAQ Item 2 -->
+      <div class="bg-white rounded-lg shadow-md mb-4 faq-item">
+        <button id="faq-toggle-2" class="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-600" aria-expanded="false">
+          <span class="text-lg font-semibold text-gray-800">How does the translation feature work?</span>
+          <svg id="faq-icon-2" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-content-2" class="px-6 py-4 border-t border-gray-200 hidden">
+          <p class="text-gray-700">The translation feature automatically converts text into multiple languages to enhance accessibility for users from different regions.</p>
+        </div>
+      </div>
+
+      <!-- FAQ Item 3 -->
+      <div class="bg-white rounded-lg shadow-md mb-4 faq-item">
+        <button id="faq-toggle-3" class="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-600" aria-expanded="false">
+          <span class="text-lg font-semibold text-gray-800">What is a smart contract?</span>
+          <svg id="faq-icon-3" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-content-3" class="px-6 py-4 border-t border-gray-200 hidden">
+          <p class="text-gray-700">A smart contract is a self-executing contract with the terms of the agreement directly written into code. It automates the execution and enforcement of agreements between parties.</p>
+        </div>
+      </div>
+
+      <!-- FAQ Item 4 -->
+      <div class="bg-white rounded-lg shadow-md mb-4 faq-item">
+        <button id="faq-toggle-4" class="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-600" aria-expanded="false">
+          <span class="text-lg font-semibold text-gray-800">How does the escrow account work?</span>
+          <svg id="faq-icon-4" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-content-4" class="px-6 py-4 border-t border-gray-200 hidden">
+          <p class="text-gray-700">An escrow account holds the payment from the dealer until the contract is signed and then releases the payment to the farmer upon successful delivery of goods.</p>
+        </div>
+      </div>
+
+      <!-- FAQ Item 5 -->
+      <div class="bg-white rounded-lg shadow-md mb-4 faq-item">
+        <button id="faq-toggle-5" class="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-600" aria-expanded="false">
+          <span class="text-lg font-semibold text-gray-800">How can I access the tutorial section?</span>
+          <svg id="faq-icon-5" class="w-6 h-6 text-gray-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="faq-content-5" class="px-6 py-4 border-t border-gray-200 hidden">
+          <p class="text-gray-700">The tutorial section can be accessed from the main menu. It provides step-by-step guides and video tutorials to help you get started with the app.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+{% include 'footer.html' %}
+
+
+<!-- Floating Arrow Button -->
+<div class="floating-btn" id="scrollToTopBtn">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 15l-7-7-7 7"></path>
+  </svg>
+</div>
+    </div>
+    <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+
+  document.querySelectorAll('.faq-item button').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      button.setAttribute('aria-expanded', !isExpanded);
+      content.classList.toggle('hidden', isExpanded);
+      content.classList.toggle('show', !isExpanded);
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    if (window.scrollY > 50) {
+      navbar.classList.add('bg-gray-800', 'shadow-lg');
+    } else {
+      navbar.classList.remove('bg-gray-800', 'shadow-lg');
+    }
+  });
+  window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    const heroSection = document.getElementById('home');
+    const heroSectionHeight = heroSection.offsetHeight;
+
+    if (window.scrollY > heroSectionHeight) {
+      navbar.classList.add('scrolled');
+      navbar.classList.remove('transparent');
+    } else {
+      navbar.classList.add('transparent');
+      navbar.classList.remove('scrolled');
+    }
+  });
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > window.innerHeight) {
+      scrollToTopBtn.style.display = 'flex';
+    } else {
+      scrollToTopBtn.style.display = 'none';
+    }
+  });
+
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
 {% endblock %}

@@ -15,7 +15,7 @@ class FarmerSignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['full_name', 'aadhar_number', 'farmer_certificate', 'address']
+        fields = ['full_name', 'aadhar_number', 'address']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -33,7 +33,7 @@ class BuyerSignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['full_name', 'aadhar_number', 'buyer_certificate', 'address']
+        fields = ['full_name', 'aadhar_number', 'address']
 
     def clean(self):
         cleaned_data = super().clean()

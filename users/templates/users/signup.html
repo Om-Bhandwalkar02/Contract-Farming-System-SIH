@@ -1,15 +1,161 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
 
-{% block title %}
-	{{ role }} Signup
-{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ role }} Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            "50": "#f0fdf4",
+                            "100": "#dcfce7",
+                            "200": "#bbf7d0",
+                            "300": "#86efac",
+                            "400": "#4ade80",
+                            "500": "#22c55e",
+                            "600": "#16a34a",
+                            "700": "#15803d",
+                            "800": "#166534",
+                            "900": "#14532d"
+                        }
+                    },
+                    fontFamily: {
+                        'body': ['Lexend', 'sans-serif'],
+                    },
+                },
+            },
+        };
 
-{% block content %}
-<h1>{{ role }} Signup</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Signup</button>
-</form>
-{% endblock %}
+        function validateAadharNumber() {
+            const aadharInput = document.getElementById('id_aadhar_number');
+            const aadharError = document.getElementById('aadhar-error');
+            const aadharValue = aadharInput.value;
 
+            if (aadharValue.length !== 12 || !/^\d{12}$/.test(aadharValue)) {
+                aadharError.textContent = "Aadhar number must be exactly 12 digits.";
+                aadharInput.classList.add('border-red-500');
+                return false;
+            } else {
+                aadharError.textContent = "";
+                aadharInput.classList.remove('border-red-500');
+                return true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const aadharInput = document.getElementById('id_aadhar_number');
+
+            form.addEventListener('submit', (event) => {
+                if (!validateAadharNumber()) {
+                    event.preventDefault();
+                }
+            });
+
+            aadharInput.addEventListener('input', validateAadharNumber);
+        });
+    </script>
+    <style>
+        .bg-signup {
+            background-image: url('{% static 'assets/index_hero1.jpg' %}');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-body">
+    {% include 'navbar.html' %}
+    <section class="flex min-h-screen">
+      <div class="w-3/5 bg-primary-100 flex flex-col items-start justify-center p-8 border-r border-primary-200 space-y-6">
+        <h1 class="text-5xl font-extrabold text-primary-700">कृषिमित्र</h1>
+        <p class="text-xl text-primary-600 mb-4">Empowering Farmers, Enabling Buyers</p>
+        <ul class="list-disc list-inside space-y-4 text-md text-primary-600 mb-4">
+            <li>Connect with buyers, manage your contracts, and expand your reach.</li>
+            <li>Discover trusted farmers, negotiate contracts, and access quality produce.</li>
+            <li>Join us to connect farming and purchasing for a more efficient marketplace</li>
+        </ul>
+      </div>
+
+        <div class="w-4/5 bg-signup flex items-center justify-center">
+            <div class="w-full max-w-lg p-4 space-y-4 bg-white rounded-lg shadow-lg border border-primary-200">
+                <h2 class="text-2xl font-semibold text-primary-700 text-center mb-4">{{ role }} Signup</h2>
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div>
+                        <label for="{{ form.full_name.id_for_label }}" class="block mb-1 text-sm font-medium text-primary-800">Full Name</label>
+                        {% if form.full_name.errors %}
+                        <input type="text" name="{{ form.full_name.name }}" id="{{ form.full_name.id_for_label }}" value="{{ form.full_name.value|default_if_none:'' }}" class="block w-full p-2 border border-red-500 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your full name">
+                        <p class="text-red-500 text-sm mt-1">{{ form.full_name.errors }}</p>
+                        {% else %}
+                        <input type="text" name="{{ form.full_name.name }}" id="{{ form.full_name.id_for_label }}" value="{{ form.full_name.value|default_if_none:'' }}" class="block w-full p-2 border border-primary-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your full name">
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.aadhar_number.id_for_label }}" class="block mb-1 text-sm font-medium text-primary-800">Aadhar Number</label>
+                        {% if form.aadhar_number.errors %}
+                        <input type="text" name="{{ form.aadhar_number.name }}" id="id_aadhar_number" value="{{ form.aadhar_number.value|default_if_none:'' }}" class="block w-full p-2 border border-red-500 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your Aadhar number" required pattern="\d{12}" title="Aadhar number must be exactly 12 digits" oninput="validateAadharNumber()">
+                        <p id="aadhar-error" class="text-red-500 text-sm mt-1">{{ form.aadhar_number.errors }}</p>
+                        {% else %}
+                        <input type="text" name="{{ form.aadhar_number.name }}" id="id_aadhar_number" value="{{ form.aadhar_number.value|default_if_none:'' }}" class="block w-full p-2 border border-primary-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your Aadhar number" required pattern="\d{12}" title="Aadhar number must be exactly 12 digits" oninput="validateAadharNumber()">
+                        <p id="aadhar-error" class="text-red-500 text-sm mt-1"></p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.address.id_for_label }}" class="block mb-1 text-sm font-medium text-primary-800">Address</label>
+                        {% if form.address.errors %}
+                        <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" class="block w-full p-2 border border-red-500 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your address">{{ form.address.value|default_if_none:'' }}</textarea>
+                        <p class="text-red-500 text-sm mt-1">{{ form.address.errors }}</p>
+                        {% else %}
+                        <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" class="block w-full p-2 border border-primary-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="Enter your address">{{ form.address.value|default_if_none:'' }}</textarea>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label for="{{ form.pin.id_for_label }}" class="block mb-1 text-sm font-medium text-primary-800">PIN</label>
+                            {% if form.pin.errors %}
+                            <input type="password" name="{{ form.pin.name }}" id="{{ form.pin.id_for_label }}" value="{{ form.pin.value|default_if_none:'' }}" class="block w-full p-2 border border-red-500 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="••••••">
+                            <p class="text-red-500 text-sm mt-1">{{ form.pin.errors }}</p>
+                            {% else %}
+                            <input type="password" name="{{ form.pin.name }}" id="{{ form.pin.id_for_label }}" value="{{ form.pin.value|default_if_none:'' }}" class="block w-full p-2 border border-primary-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="••••••">
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-1">
+                            <label for="{{ form.pin_confirmation.id_for_label }}" class="block mb-1 text-sm font-medium text-primary-800">Confirm PIN</label>
+                            {% if form.pin_confirmation.errors %}
+                            <input type="password" name="{{ form.pin_confirmation.name }}" id="{{ form.pin_confirmation.id_for_label }}" value="{{ form.pin_confirmation.value|default_if_none:'' }}" class="block w-full p-2 border border-red-500 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="••••••">
+                            <p class="text-red-500 text-sm mt-1">{{ form.pin_confirmation.errors }}</p>
+                            {% else %}
+                            <input type="password" name="{{ form.pin_confirmation.name }}" id="{{ form.pin_confirmation.id_for_label }}" value="{{ form.pin_confirmation.value|default_if_none:'' }}" class="block w-full p-2 border border-primary-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="••••••">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if form.errors %}
+                    <ul class="text-red-500 list-disc pl-5 space-y-1">
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 rounded-lg focus:ring-4 focus:ring-primary-300 transition">Signup</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% include 'footer.html' %}
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Contract Detail
+{% endblock %}
+
+{% block content %}
+    <div class="mt-5 mb-8">
+    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg border border-gray-300 max-w-4xl">
+        <h2 class="text-4xl font-extrabold text-green-800 mb-3 text-center border-b-4 border-green-300 pb-2">Contract Farming Agreement</h2>
+
+        <p class="text-md text-gray-800 mb-8 text-center">
+            This Contract Farming Agreement is made and entered into on <strong>{{ contract.created_at }}</strong> by and between:
+        </p>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Farmer</h3>
+            <p class="text-gray-800 mb-2"><strong>Name: </strong>{{ contract.farmer.full_name }}</p>
+            <p class="text-gray-800 mb-2"><strong>Address: </strong>{{ contract.farmer.address }}</p>
+            <p class="text-gray-800 mb-2"><strong>Aadhar Card Number: </strong>{{ contract.farmer.aadhar_number }}</p>
+        </div>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Buyer</h3>
+            <p class="text-gray-800 mb-2"><strong>Name: </strong>{{ contract.buyer.full_name }}</p>
+            <p class="text-gray-800 mb-2"><strong>Address: </strong>{{ contract.buyer.address }}</p>
+            <p class="text-gray-800 mb-2"><strong>Aadhar Card Number: </strong>{{ contract.buyer.aadhar_number }}</p>
+        </div>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Product Details</h3>
+            <p class="text-gray-800 mb-2"><strong>Product Name: </strong>{{ contract.product_name }}</p>
+            <p class="text-gray-800 mb-2"><strong>Quantity: </strong>{{ contract.quantity }} kg</p>
+            <p class="text-gray-800 mb-4"><strong>Price per Unit: </strong>₹{{ contract.price_per_unit }} per kg</p>
+        </div>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Delivery Terms</h3>
+            <p class="text-gray-800 mb-2"><strong>Address: </strong>{{ contract.delivery_address }}</p>
+            <p class="text-gray-800 mb-2"><strong>Handler: </strong>{{ contract.delivery_handler }}</p>
+            <p class="text-gray-800 mb-4"><strong>Delivery Date: </strong>{{ contract.delivery_date }}</p>
+        </div>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Contract Terms and Conditions</h3>
+            <div class="space-y-4 text-gray-800">
+                <p><strong>Agreement to Sell and Buy:</strong> The Farmer agrees to sell, and the Buyer agrees to purchase the Product(s) described above in accordance with the terms and conditions of this Agreement.</p>
+                <p><strong>Quality and Standards:</strong> The Product(s) delivered must meet the quality and standards specified by the Buyer. Any Product(s) that do not meet these specifications may be rejected or returned at the Farmer's expense.</p>
+                <p><strong>Delivery Terms:</strong> The Product(s) must be delivered to the Delivery Address by the Delivery Date. The Delivery Handler is responsible for ensuring that the Product(s) are transported and delivered safely.</p>
+                <p><strong>Risk of Loss:</strong> Risk of loss or damage to the Product(s) will transfer from the Farmer to the Buyer upon delivery to the Delivery Address.</p>
+                <p><strong>Force Majeure:</strong> Neither party shall be liable for any failure or delay in performance due to circumstances beyond their reasonable control.</p>
+                <p><strong>Dispute Resolution:</strong> Any disputes arising out of or in connection with this Agreement shall be resolved through mediation or arbitration in accordance with the laws of the Government of India.</p>
+                <p><strong>Termination:</strong> This Agreement may be terminated by either party upon 30 days' written notice if either party fails to meet their obligations under this Agreement.</p>
+                <p><strong>Governing Law:</strong> This Agreement shall be governed by and construed in accordance with the laws of the Government of India.</p>
+            </div>
+        </div>
+
+        <div class="mb-4 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-md">
+            <h3 class="text-3xl font-semibold text-green-700 mb-4 border-b-2 border-green-300 pb-2">Signatures</h3>
+            <p class="text-gray-800 mb-2">
+                <strong>Farmer:</strong> {% if contract.signed_by_farmer %}Signed on <strong>{{ contract.farmer_signed_at }}</strong>{% else %}Not Signed{% endif %}
+            </p>
+            <p class="text-gray-800 mb-6">
+                <strong>Buyer:</strong> {% if contract.signed_by_buyer %}Signed on <strong>{{ contract.buyer_signed_at }}</strong>{% else %}Not Signed{% endif %}
+            </p>
+        </div>
+
+        {% if request.user.role == 'farmer' and not contract.signed_by_farmer %}
+            <a href="{% url 'sign_contract' contract.id %}" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 mb-4 text-center font-semibold">Sign Contract</a>
+        {% elif request.user.role == 'buyer' and contract.signed_by_farmer and not contract.signed_by_buyer %}
+            <a href="{% url 'sign_contract' contract.id %}" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 mb-4 text-center font-semibold">Sign Contract</a>
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}

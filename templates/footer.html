@@ -1,0 +1,29 @@
+{% load static %}
+<footer class="bg-gray-800 text-white py-6">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+    <!-- Left side for the logo -->
+    <div class="flex-shrink-0 mb-6 md:mb-0">
+      <a href="{% url 'index' %}">
+      <img src="{% static 'assets/logo.png' %}" alt="Your Company Logo" class="h-12">
+      </a>
+    </div>
+
+    <!-- Right side for the links, aligned to the right -->
+    <div class="flex flex-col md:flex-row items-center md:items-end md:ml-auto">
+      <nav>
+        <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-center md:text-right">
+          <li><a href="{% url 'index' %}" class="hover:text-blue-400">Home</a></li>
+          <li><a href="{% url 'farmer_login' %}" class="hover:text-blue-400">Farmer</a></li>
+          <li><a href="{% url 'buyer_login' %}" class="hover:text-blue-400">Buyer</a></li>
+          <li><a href="#" class="hover:text-blue-400">Tutorial</a></li>
+          <li><a href="{% url 'about' %}" class="hover:text-blue-400">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Horizontal Line and Copyright -->
+  <div class="border-t border-gray-600 mt-6 pt-4 text-center">
+    <p>&copy; 2024 कृषिमित्र. All rights reserved.</p>
+  </div>
+</footer>
