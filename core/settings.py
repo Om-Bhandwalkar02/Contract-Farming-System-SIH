@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'users.apps.UsersConfig',
     "base.apps.BaseConfig",
-    "contracts.apps.ContractsConfig"
+    "contracts.apps.ContractsConfig",
+    "posts.apps.PostsConfig"
 ]
 
 MIDDLEWARE = [
@@ -103,8 +104,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = 'TWILIO_AUTH_TOKEN'
-TWILIO_PHONE_NUMBER = 'TWILIO_PHONE_NUMBER'
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 
 
 

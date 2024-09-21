@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <h1 class="text-3xl font-bold mb-6">All Posts</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for post in posts %}
+      <a href="{% url 'post_detail' post.pk %}" class="flex flex-col md:flex-row items-start bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <img class="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-r-lg" src="{{ post.image.url }}" alt="">
+        <div class="flex flex-col justify-between p-4 leading-normal">
+          <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ post.product }}</h5>
+          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">by {{ post.author.full_name }} on {{ post.created_at|date:"d M Y H:i" }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+  <div class="mt-8">
+    <a href="{% url 'create_post' %}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create New Post</a>
+  </div>
+{% endblock %}

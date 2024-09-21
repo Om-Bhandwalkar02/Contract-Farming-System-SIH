@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ post.product }}</h1>
+  <p>{{ post.description }}</p>
+  {% if post.image %}
+    <img src="{{ post.image.url }}" alt="Post Image">
+  {% endif %}
+  <p>Posted by {{ post.author.full_name }} on {{ post.created_at|date:"d M Y H:i" }}</p>
+  <p>Address: {{ post.address }}, Pincode: {{ post.pincode }}</p>
+  <p>Estimated Delivery Time: {{ post.estimated_delivery_time|date:"d M Y H:i" }}</p>
+  {% if user == post.author %}
+    <a href="{% url 'update_post' post.pk %}">Edit Post</a>
+  {% endif %}
+{% endblock %}
