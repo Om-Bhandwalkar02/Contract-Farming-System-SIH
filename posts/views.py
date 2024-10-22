@@ -2,11 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def post_list(request):
     posts = Post.objects.all()
-    return render(request, 'posts/post_list.html', {'posts': posts})
+    user = request.user
+    return render(request, 'posts/post_list.html', {'posts': posts, 'user': user})
 
 
 def post_detail(request, pk):

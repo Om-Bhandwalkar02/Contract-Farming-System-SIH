@@ -1,19 +1,633 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
 {% load static %}
-{% block content %}
-  <h1 class="text-3xl font-bold mb-6">All Posts</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for post in posts %}
-      <a href="{% url 'post_detail' post.pk %}" class="flex flex-col md:flex-row items-start bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-        <img class="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-r-lg" src="{{ post.image.url }}" alt="">
-        <div class="flex flex-col justify-between p-4 leading-normal">
-          <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ post.product }}</h5>
-          <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">by {{ post.author.full_name }} on {{ post.created_at|date:"d M Y H:i" }}</p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap');
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap">
+    <style>
+        /* Apply Lexend font to all elements */
+        body, h1, h2, h3, h4, h5, h6, p, ul, li, a {
+            font-family: 'Lexend', sans-serif;
+        }
+        .filter-toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .filter-content a {
+            color: black; /* Set font color to black */
+        }
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+
+        /* Hidden chatbox */
+        .chatbox {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            display: none; /* Initially hidden */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease-in-out;
+            max-width: 100%;
+        }
+
+        /* Chatbox header */
+        .chatbox-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Chatbox body */
+        .chatbox-body {
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Chatbox input area */
+        .chatbox-footer {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+
+        .chatbox-footer input {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            width: 18%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message {
+            max-width: 80%;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+        }
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        /* Animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .chatbox {
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 50vh;
+            }
+
+            .chatbox-body {
+                height: 30vh;
+            }
+
+            .chatbot-avatar {
+                right: 10px;
+            }
+        }
+
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.querySelector('[data-collapse-toggle="dropdown-example"]');
+            const dropdown = document.getElementById('dropdown-example');
+
+            button.addEventListener('click', function() {
+                dropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+</head>
+<body class="bg-gray-100">
+
+<!-- Sidebar -->
+<nav class="fixed top-0 z-50 w-full bg-transparent border-b border-gray-200" style="background-color: rgba(255, 255, 255, 0.6); background-image: url('assets/agri1.jpg'); background-size: cover; background-position:top;">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center justify-start rtl:justify-end">
+                <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                    <span class="sr-only">Open sidebar</span>
+                    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                    </svg>
+                </button>
+                <a href="{% url 'index' %}" class="flex ms-2 md:me-24">
+                    <img src="{% static 'assets/logo.png' %}" class="h-8 me-3" alt="KrishiMitra Logo" />
+                </a>
+            </div>
+            <div class="hidden md:flex md:grow md:justify-center md:mx-4 flex-grow">
+                <input type="text" id="search" placeholder="Search..." class="w-80 px-2 py-1 border border-gray-300 rounded-full dark:bg-white dark:border-gray-600 dark:text-black" />
+            </div>
+            <div class="hidden lg:flex lg:gap-x-12">
+                <a href="{% url 'index' %}" class="nav-link text-sm font-semibold leading-6 text-gray-900 px-3 py-2 rounded-lg transition duration-300 ease-in-out hover:text-green-500 hover:underline">
+                    Home
+                </a>
+
+                <a href="{% url 'post_list' %}" class="nav-link text-sm font-semibold leading-6 text-gray-900 px-3 py-2 rounded-lg transition duration-300 ease-in-out hover:text-green-500 hover:underline">
+                    Feed
+                </a>
+                <a href="{% url 'about' %}" class="nav-link text-sm font-semibold leading-6 text-gray-900 px-3 py-2 rounded-lg transition duration-300 ease-in-out hover:text-green-500 hover:underline">
+                    About Us
+                </a>
+                <a href="#" class="nav-link text-sm font-semibold leading-6 text-gray-900 px-3 py-2 rounded-lg transition duration-300 ease-in-out hover:text-green-500 hover:underline">
+                    Tutorial
+                </a>
+            </div>
+
+            <div class="relative flex items-center">
+                <div class="flex items-center ms-3">
+                    <button type="button" id="user-menu-button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300">
+                        <span class="sr-only">Open user menu</span>
+                        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                    </button>
+                    <div class="absolute right-0 z-50 hidden mt-1 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-lg" id="dropdown-user" style="top: 100%; right: 50;">
+                        <div class="px-4 py-3">
+                            <p class="text-sm text-gray-900">{{ request.user.full_name }}</p>
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ request.user }}</p>
+                        </div>
+                        <ul class="py-1">
+                            <li>
+                                <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-200">Profile</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'contract_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-200">Contracts</a>
+                            </li>
+                            <li>
+                    <form method="POST" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-200">
+                        Sign out
+                      </button>
+                    </form>
+                                <a href="" ></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </a>
-    {% endfor %}
-  </div>
-  <div class="mt-8">
-    <a href="{% url 'create_post' %}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create New Post</a>
-  </div>
-{% endblock %}
+    </div>
+</nav>
+
+<script>
+    // Highlight active link based on current page URL
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.nav-link');
+        var currentUrl = window.location.pathname.split("/").pop();
+
+        navLinks.forEach(function(link) {
+            if (link.getAttribute('href') === currentUrl) {
+                link.classList.add('underline');
+            }
+        });
+    });
+</script>
+<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full border-r border-gray-200 sm:translate-x-0" style="background-image: url('assets/agri1.jpg'); background-size: cover; background-position: center; background-color: rgba(255, 255, 255, 0.6);">
+    <div class="h-full px-3 pb-4 overflow-y-auto">
+        <ul class="space-y-2 font-medium">
+            <!-- Filter Section: Location -->
+            <li>
+                <button type="button" class="flex items-center w-full p-2 text-white hover:text-black bg-green-500 hover:bg-green-400 transition duration-75 rounded-lg group filter-toggle" data-target="filterLocation">
+                    <svg class="w-5 h-5 text-black transition duration-75 group-hover:text-white filter-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C8.686 2 6 4.686 6 8c0 3.308 6 14 6 14s6-10.692 6-14c0-3.314-2.686-6-6-6zm0 9c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2z"/>
+                    </svg>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Location</span>
+                    <svg class="w-6 h-6 filter-toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <ul class="py-2 space-y-2 filter-content hidden bg-white" id="filterLocation">
+                    <li class="px-4 py-2">
+                        <label for="radius" class="block text-black">Select Radius (up to 10000 km):</label>
+                        <input type="range" id="radius" min="0" max="10000" value="5000" class="w-full">
+                        <span id="radiusValue" class="text-black">5000 km</span>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Filter Section: Crop Type -->
+            <li>
+                <button type="button" class="flex items-center w-full p-2 text-white hover:text-black bg-green-500 hover:bg-green-400 transition duration-75 rounded-lg group filter-toggle" data-target="filterCropType">
+                    <img src="assets/crop_filter.svg" alt="Price Filter" class="w-5 h-5 transition duration-75 group-hover:text-white" />
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Crop Type</span>
+                    <svg class="w-6 h-6 filter-toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <ul class="py-2 space-y-2 filter-content hidden bg-white" id="filterCropType">
+                    <li>
+                        <a href="#" class="flex items-center w-full p-2 text-black bg-green-200 hover:bg-green-300 transition duration-75 rounded-lg pl-11 group">Wheat</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center w-full p-2 text-black bg-green-200 hover:bg-green-300 transition duration-75 rounded-lg pl-11 group">Rice</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center w-full p-2 text-black bg-green-200 hover:bg-green-300 transition duration-75 rounded-lg pl-11 group">Corn</a>
+                    </li>
+                    <!-- Add more crop types as needed -->
+                </ul>
+            </li>
+
+            <!-- Filter Section: Price Range per Kg -->
+            <li>
+                <button type="button" class="flex items-center w-full p-2 text-white hover:text-black bg-green-500 hover:bg-green-400 transition duration-75 rounded-lg group filter-toggle" data-target="filterPriceRange">
+                    <img src="assets/price_filter.png" alt="Price Filter" class="w-5 h-5 transition duration-75 group-hover:text-white" />
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Price Range per Kg</span>
+                    <svg class="w-6 h-6 filter-toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <ul class="py-2 space-y-2 filter-content hidden bg-white" id="filterPriceRange">
+                    <li>
+                        <label class="flex items-center w-full p-2 text-black rounded-lg group">
+                            <span class="flex-shrink-0">From:</span>
+                            <input type="text" placeholder="Enter min price" class="ml-2 border p-1 rounded max-w-[180px]" />
+                        </label>
+                    </li>
+                    <li>
+                        <label class="flex items-center w-full p-2 text-black rounded-lg group">
+                            <span class="flex-shrink-0">To:</span>
+                            <input type="text" placeholder="Enter max price" class="ml-2 border p-1 rounded max-w-[180px]" />
+                        </label>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</aside>
+
+<script>
+    document.querySelectorAll('.filter-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+            const icon = button.querySelector('.filter-toggle-icon');
+
+            if (targetContent.classList.contains('hidden')) {
+                targetContent.classList.remove('hidden');
+                icon.classList.add('rotate-180'); // Rotate the icon to indicate expansion
+            } else {
+                targetContent.classList.add('hidden');
+                icon.classList.remove('rotate-180'); // Rotate the icon back to original position
+            }
+        });
+    });
+    const radiusInput = document.getElementById('radius');
+    const radiusValue = document.getElementById('radiusValue');
+
+    radiusInput.addEventListener('input', () => {
+        radiusValue.textContent = `${radiusInput.value} km`;
+    });
+</script>
+
+<!-- Main Content -->
+<div class="bg-white py-24 sm:py-32 ml-64">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-3">
+            <h1 class="text-2xl font-bold mb-1">Marketplace</h1>
+            {% if request.user.role == 'buyer' %}
+            	<a href="{% url 'create_contract' %}" style="color: white; background-color: green; padding: 10px 20px; border-radius: 5px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); cursor: pointer;">
+    Create Contract
+</a>
+            {% endif %}
+<a href="{% url 'contract_list' %}" style="color: white; background-color: green; padding: 10px 20px; border-radius: 5px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); cursor: pointer;">
+List Contract
+</a>
+
+            <button class="text-white bg-green-500 hover:bg-green-400 font-bold py-2 px-2 rounded-full flex items-center justify-center" onclick="openAdWindow()">
+                <!-- Button Text -->
+                <span>Create an AD</span>
+            </button>
+            <script>
+                function openAdWindow() {
+                    // Calculate the screen's center position
+                    const width = 800;
+                    const height = 500;
+                    const screenWidth = window.screen.width;
+                    const screenHeight = window.screen.height;
+
+                    // Calculate the left and top positions to center the window
+                    const left = (screenWidth - width) / 2;
+                    const top = (screenHeight - height) / 2;
+
+                    // Open the window in the center of the screen
+                    window.open("{% url 'create_post' %}", "Create Ad", `width=${width},height=${height},top=${top},left=${left}`);
+                }
+            </script>
+
+
+        </div>
+        {% for post in posts %}
+        <div class="mx-auto mt-16 max-w-7xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none bg-gray-300">
+            <!-- Content section -->
+            <div class="p-8 sm:pt-10 lg:flex-auto">
+                <!-- Name and Time since posted -->
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold tracking-tight text-gray-900">{{ post.author.full_name }}</h3>
+                    <p class="text-xs text-gray-500">{{ post.created_at|timesince }} ago</p>
+                </div>
+
+                <!-- Phone Number -->
+                <p class="text-md text-gray-600 mt-1">{{ post.author }}</p>
+
+                <!-- Product Name -->
+                <h3 class="mt-4 text-2xl font-bold tracking-tight text-gray-900">{{ post.product }}</h3>
+
+                <!-- Product Description Section -->
+                <div class="mt-6">
+                    <h4 class="text-lg font-semibold text-green-600">Product Description</h4>
+                    <div class="h-px bg-gray-100 mt-2"></div>
+                    <p id="productDescription" class="mt-4 text-lg leading-6 text-gray-600">
+                        {{ post.description }}
+                    </p>
+                    <label for="modal-toggle" class="mt-2 text-green-600 cursor-pointer">See More</label>
+                    <input type="checkbox" id="modal-toggle" class="hidden" />
+
+                    <!-- Modal -->
+                    <div id="productModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden">
+                        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[70vh] overflow-auto relative mt-16 ml-64 flex">
+                            <!-- Left Side (Text Details) -->
+                            <div class="flex-1 pr-4">
+                                <h3 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">{{ post.product }}</h3>
+                                <!-- Added Name, Phone Number, and Time since posted -->
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-lg font-bold tracking-tight text-gray-900">{{ post.author.full_name }}</h3>
+                                    <p class="text-xs text-gray-500">{{ post.created_at|timesince }} ago</p>
+                                </div>
+                                <p class="text-md text-gray-600 mb-2">{{ post.author }}</p>
+                                <p class="text-lg leading-6 text-gray-600 mb-4">{{ post.description }}</p>
+                                <ul class="mt-4 space-y-2 text-gray-700">
+                                    <li><strong>Amount:</strong> 50Kg //ye hold pe rakha a</li>
+                                    <li><strong>Price:</strong> {{ post.price_per_unit }} / Kg</li>
+                                    <li><strong>Location:</strong>{{ post.city }}</li>
+                                    <li><strong>Estimated Time:</strong>{{ post.estimated_delivery_time }}</li>
+                                </ul>
+                                <button id="chatBtn" class="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors">Chat with Publisher</button>
+                            </div>
+
+                            <!-- Right Side (Image) -->
+                            <div class="flex-none w-1/3 relative pt-10">
+                                <label for="modal-toggle" class="absolute top-0 right-0 mt-2 mr-2 text-gray-600 hover:text-gray-900 z-10 cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </label>
+                                {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="Wheat Image" class="w-full h-auto rounded-lg shadow-md">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information Section -->
+                <div class="mt-6">
+                    <div class="flex justify-between">
+                        <p class="text-md text-gray-600"><strong>Amount:</strong> 50 Kg //ye hold pe rakha a</p>
+                        <p class="text-md text-gray-600"><strong>Price:</strong> {{ post.price_per_unit }} / Kg</p>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <p class="text-md text-gray-600"><strong>Location:</strong>{{ post.city }}</p>
+                        <p class="text-md text-gray-600"><strong>Estimated Time:</strong>{{ post.estimated_delivery_time }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image section -->
+            <div class="lg:w-1/2 lg:pl-8">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="Wheat Image" class="w-full h-full object-cover rounded-r-3xl">
+                {% endif %}
+            </div>
+        </div>
+{% endfor %}
+        <style>
+            #modal-toggle:checked ~ #productModal {
+                display: flex;
+            }
+        </style>
+        <!-- Chat Icon -->
+<div id="chat-icon" class="fixed bottom-4 right-4 bg-green-600 text-white p-3 rounded-full cursor-pointer z-50"> <!-- Added z-index to ensure it appears above other elements -->
+    💬
+</div>
+
+<!-- Pagination -->
+<div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-10">
+    <div class="flex flex-1 justify-between sm:hidden">
+        <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+        <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+    </div>
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div>
+            <p class="text-sm text-gray-700">
+                Showing
+                <span class="font-medium">1</span>
+                to
+                <span class="font-medium">10</span>
+                of
+                <span class="font-medium">97</span>
+                results
+            </p>
+        </div>
+        <div>
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-green-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+                <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+                <a href="#" class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- JavaScript to toggle dropdown -->
+<script>
+    const userMenuButton = document.getElementById('user-menu-button');
+    const dropdownUser = document.getElementById('dropdown-user');
+
+    userMenuButton.addEventListener('click', function() {
+        // Toggle dropdown visibility with smooth transition
+        if (dropdownUser.classList.contains('hidden')) {
+            dropdownUser.classList.remove('hidden');
+            dropdownUser.classList.add('opacity-100');
+            setTimeout(() => dropdownUser.style.opacity = '1', 0); // Make sure the opacity transition applies
+        } else {
+            dropdownUser.classList.remove('opacity-100');
+            setTimeout(() => {
+                dropdownUser.classList.add('hidden');
+            }, 300); // Delay hiding to allow opacity transition
+        }
+    });
+
+    // Close dropdown if clicked outside
+    window.addEventListener('click', function(event) {
+        if (!userMenuButton.contains(event.target) && !dropdownUser.contains(event.target)) {
+            dropdownUser.classList.remove('opacity-100');
+            setTimeout(() => {
+                dropdownUser.classList.add('hidden');
+            }, 300); // Delay hiding to allow opacity transition
+        }
+    });
+</script>
+
+<script>
+    const chatIcon = document.getElementById('chat-icon');
+    const chatbox = document.getElementById('chatbox');
+    const closeChat = document.getElementById('close-chat');
+    const sendButton = document.getElementById('send-button');
+    const chatboxBody = document.querySelector('.chatbox-body');
+    const userInput = document.getElementById('user-input');
+
+    const botResponses = [
+        "How can I help you today?",
+        "Could you please provide more details?",
+        "We are working on your request...",
+        "Thank you for reaching out! We'll get back to you shortly."
+    ];
+
+    // Show/Hide chatbox
+    chatIcon.addEventListener('click', () => {
+        chatbox.style.display = chatbox.style.display === 'block' ? 'none' : 'block';
+    });
+
+    closeChat.addEventListener('click', () => {
+        chatbox.style.display = 'none';
+    });
+
+    // Function to simulate bot response
+    function botReply() {
+        const message = document.createElement('div');
+        message.classList.add('message', 'bot-message', 'mb-3', 'p-2', 'bg-blue-100', 'rounded-lg');
+        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+        message.innerHTML = <span>${randomResponse}</span>;
+        chatboxBody.appendChild(message);
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
+
+    // Function to simulate typing indicator
+    function showTypingIndicator() {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('typing-indicator', 'mb-3', 'p-2', 'bg-gray-100', 'rounded-lg');
+        typingIndicator.innerHTML = <span>Bot is typing...</span>;
+        chatboxBody.appendChild(typingIndicator);
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+
+        // Remove the typing indicator after a delay and show bot response
+        setTimeout(() => {
+            typingIndicator.remove();
+            botReply();
+        }, 1000);
+    }
+
+    // Send message on button click
+    sendButton.addEventListener('click', () => {
+        const userMessage = userInput.value.trim();
+        if (userMessage !== '') {
+            const userMessageElement = document.createElement('div');
+            userMessageElement.classList.add('message', 'user-message', 'mb-3', 'p-2', 'bg-green-100', 'rounded-lg');
+            userMessageElement.innerHTML = <span>${userMessage}</span>;
+            chatboxBody.appendChild(userMessageElement);
+            chatboxBody.scrollTop = chatboxBody.scrollHeight;
+
+            // Clear input and show bot response
+            userInput.value = '';
+            setTimeout(showTypingIndicator, 500); // Simulate response delay
+        }
+    });
+</script>
+
+<script src="https://unpkg.com/alpinejs" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const button = document.querySelector('[data-collapse-toggle="dropdown-example"]');
+        const dropdown = document.getElementById('dropdown-example');
+
+        button.addEventListener('click', function() {
+            dropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    });
+</script>
+</body>
+</html>

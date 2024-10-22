@@ -15,4 +15,4 @@ def feedback(request):
 
 
 def dashboard(request):
-    return render(request, 'base/dashboard.html')
+    return render(request, 'posts/post_list.html')
